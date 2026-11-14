@@ -1,131 +1,34 @@
-# FRAMEWORK — Video Editing SOP Academy
+# FRAMEWORK SOP — Editorial Minimal Onboarding
 
-A ready-to-deploy, **static GitHub Pages website** for onboarding video editors. Inspired by the *7:15–14:00* onboarding section of the supplied video and adapted from the provided `Video_Editing_SOP.html`.
+## GitHub Pages deployment
+Upload everything **except `email-worker/`** from this folder to your repository root and deploy with the included GitHub Pages workflow. Leave `config.js` present.
 
-## Features
+## Current UI / editor flow
+- Warm-cream and charcoal design inspired by the supplied Japanese minimal game concept board (not a game clone).
+- Every new editor first enters full name, mobile and email, including consent to send details to the reviewer.
+- Module progression remains sequential, per-format and with increasing quizzes.
+- Original Premiere export and audio screenshots are embedded into `app.js` byte-for-byte, avoiding broken asset paths.
+- Original assignments and preset links, SF/LF output naming, audio mixer checks and creator credit remain.
+- Progress uses **sessionStorage** (per browser tab), not shared localStorage. Editor name/contact information is cleared once the completion report is downloaded. Reloading during the same browser session retains progress.
+- Final report can be downloaded **only after all eight modules, mixer checks, final checks, project and valid assignment URL**. Download automatically clears the editor session; a fresh editor onboarding page appears.
+- Email button sends the assignment link, project name, notes and registered editor name/phone/email if the backend is configured and responds successfully. There is no false 'sent' status when mail fails.
 
-- **Two independent modes:** Short Format (9:16) and Long Format (16:9).
-- **Preserved source screenshots:** the exact original uploaded **Short Form Export**, **Long Form Export**, and **Audio Track Mixer** PNG files are included in `assets/original-screenshots/` with no edits, cropping, regeneration, or compression. View on Settings, Module 01, Module 08, or Final Edit; click **Open full original** to view at native resolution.
-- **Sequence settings:** values from the user-provided sequence screenshots are written into the modules and Settings; the original sequence image files themselves were not present in the files available for packaging, so images are **not** imitated or regenerated.
-- **Editable format settings:** aspect ratio, resolution, FPS, duration, hook, pacing, subtitles, platform, safe-area notes; dedicated Premiere Pro **export settings** with bitrate encoding, target/max bitrate, color space, field order, AAC audio and quality controls.
-- **Long-format export presets:** one click applies an alternative YouTube 1080p preset or restores the uploaded 4K screenshot values (always verify source frame rate). Download a plain-text export settings handoff sheet for either format.
-- **Eight guided modules** per format with detailed lessons, format-specific tips, practical checklists and quick-check quizzes. **Sequential locking**: only Module 01 is open initially; Module 02 unlocks after Module 01 has every task checked AND the quiz correct, and so forth. Deep links also respect the lock. Progress/unlocking is independent for Short and Long.
-- **Separate progress tracking:** each format has its own module statuses and completion percentage.
-- **SOP library:** includes the supplied complete original SOP with searchable section shortcuts and an embedded reading view.
-- **Mandatory pre-export Audio Track Mixer handoff:** copy approved effect racks from the previous reference project into the new delivery sequence, verify routing/levels, log the source and complete an auditable checklist before delivery. The transfer is done manually in Premiere Pro, not by the website.
-- **Final Edit:** real-export checklist, video review link, notes, reviewer and Markdown report download.
-- **JSON backup/import:** move your progress and settings between browsers manually.
-- Responsive, accessible, no APIs, no secrets, no database and no `npm install` needed.
+## How to make automatic emails work
+GitHub Pages is static and **cannot securely email by itself**. This ZIP includes a separate optional Cloudflare Worker (`email-worker/src/index.js`) using Resend. No API keys are embedded in GitHub.
 
-## Upload to GitHub (fastest)
+1. Create a Cloudflare Workers app; use `email-worker/src/index.js` as the Worker code (or deploy with Wrangler using the provided `wrangler.toml.example` renamed to `wrangler.toml`).
+2. Register a sender domain with Resend and obtain a Resend API key.
+3. Set **Worker secrets**, never GitHub/public JS: `RESEND_API_KEY`, `REVIEWER_EMAIL` (the inbox that receives assignments), `SENDER_EMAIL` (verified from email), `ALLOWED_ORIGIN` (exact GitHub Pages origin, e.g. `https://username.github.io`).
+4. In `config.js` enter the public deployed worker URL, e.g. `https://sop-assignment-email.YOUR-SUBDOMAIN.workers.dev`.
+5. Deploy GitHub Pages, test a **real assignment**; confirm the reviewer receives the mail and the site marks it sent only on API success.
 
-1. Create a **new public GitHub repository** (for example, `editing-sop`).
-2. Upload **the CONTENTS of this folder** into the repository root — `index.html`, `styles.css`, `app.js`, `data.js`, `.nojekyll`, `.github/`, and `reference/`.
-3. Commit the changes to the `main` branch.
-4. In **Settings → Pages**, set the Build and deployment source to **GitHub Actions**.
-5. The included `.github/workflows/deploy.yml` automatically publishes the site after a push to `main`.
-6. Visit `https://YOUR-USERNAME.github.io/editing-sop/` after deployment succeeds. For a custom repo name, replace `editing-sop` in the URL.
+The Worker validates inputs, keeps mail credentials private, and limits caller origins. **For a larger public rollout add CAPTCHA/Turnstile, abuse protection and ideally authenticated editor accounts**; browser-side completion checkboxes are not tamper-proof. Origin validation alone is not authentication.
 
-The app is also testable directly by opening `index.html` in a desktop browser. Some browsers restrict local iframe access; run `python -m http.server 8000` and visit `http://localhost:8000` for best local testing.
+### Reviewer email address
+No recipient email was supplied, so it is deliberately **not hardcoded**. Automatic emailing will remain disabled until secrets and the `config.js` URL are configured.
 
-## GitHub Actions maintenance (November 2026)
+### Privacy and reset
+PII is only placed in the current browser session and submission payload, not in a public GitHub repository. The mail provider stores delivery metadata under its own retention policies. Downloaded reports include the editor's details, so keep them secure. Reloading a tab retains state; closing tab or exporting the report resets it. On a shared device, close tab after usage.
 
-The workflow at `.github/workflows/deploy.yml` uses Node.js 24-compatible
-GitHub Pages actions (`checkout@v6`, `configure-pages@v6`,
-`upload-pages-artifact@v5`, `deploy-pages@v5`) and pins the runner to
-`ubuntu-24.04` instead of `ubuntu-latest`. This prevents the reported
-Node.js 20 deprecation warning from the legacy Pages artifact uploader and
-avoids the Ubuntu 26 migration notices for this workflow.
-
-**Existing GitHub repository:** replace only `.github/workflows/deploy.yml`
-with this version, commit the change to `main`, and inspect the next run in
-Actions. Previously completed runs retain their historical warnings.
-Actual deployment success must be checked on GitHub after pushing.
-
-## Files
-
-| File | Purpose |
-|---|---|
-| `index.html` | Main HTML entry point |
-| `styles.css` | Responsive visual design |
-| `data.js` | All module, quiz, checklist and format-default content |
-| `app.js` | Navigation, progress, settings, reports and data persistence |
-| `reference/Video_Editing_SOP.html` | Your original SOP, preserved |
-| `assets/original-screenshots/` | Your untouched Short and Long export PNGs, plus original Audio Track Mixer PNG |
-| `.github/workflows/deploy.yml` | Automatic GitHub Pages deployment |
-| `.nojekyll` | Serve root files as static files |
-
-## Important limitations
-
-This is a **static GitHub Pages app**, not a server application. By design:
-
-- Progress, format presets and review notes are stored in the **current browser's local storage**. They are not shared automatically across your editing team.
-- A review URL is stored locally; the app does **not upload videos to Drive/Frame.io or notify a reviewer**.
-- **Mark ready for review** confirms local completion only. Download the Markdown delivery report and send it with your link to your reviewer.
-- Import/export JSON provides manual backup and portability. Avoid importing backups from people you do not trust.
-
-For shared logins, reviewer dashboards, actual video uploads or sync across editors, the website would need an authorized backend and storage provider (e.g. Supabase or Firebase).
-
-## Editing content or defaults
-
-All SOP lessons and quiz answers live in `data.js`. Format defaults can be changed in `formats.short.defaults` and `formats.long.defaults`. Each user can also customize their personal format settings inside the website.
-
-Content is adapted to your uploaded SOP. The default screenshot-matching values are **Short:** 1080 × 1920 / 25 fps / VBR 2-pass / 20 and 20 Mbps / AAC 384 kbps; **Long:** 3840 × 2160 / 23.976 fps / VBR 2-pass / 30 and 30 Mbps / AAC 384 kbps. The optional YouTube 1080p preset is different from the supplied screenshots; always follow the project brief and your delivery platform's latest requirements.
-
-## Mandatory Adobe Premiere Pro Audio Track Mixer transfer
-
-Perform this **after editing but before exporting**, on **each deliverable** (both Short Format and Long Format):
-
-1. Save a backup/version of the current editing project. Import the **approved previous project** and its reference sequence into the new project (File → Import → select sequences), if you cannot already access it in Premiere.
-2. Open the old/reference sequence. In **Window → Audio Track Mixer**, reveal **Effects and Sends**.
-3. On each relevant approved dialogue, music, SFX, submix or Mix/Master rack, right-click the top of the effect rack and select **Copy Track Effects**.
-4. Open the **new delivery sequence**. Right-click the corresponding destination track's effect rack → **Paste Track Effects**.
-5. Check order, plugin availability and all values; repeat for other tracks. **Pasting a rack may replace its existing effects**, so do not overwrite an unsaved setup. **Faders, pan, routing and sends must be verified independently** against the old reference.
-6. Play back the new sequence, inspect meters for distortion/clipping, then export with the format-specific settings. Check the rendered file.
-7. In the site's **Final Edit** page, name the source project and tick the 4 **pre-export Audio Track Mixer** confirmations. These are required to mark a delivery ready for review.
-
-Adobe official reference: https://helpx.adobe.com/premiere/desktop/add-audio-effects/apply-audio-effects/copy-and-move-effects-in-audio-track-mixer.html
-
-The site **cannot** access Premiere Pro, transfer effects itself or verify audio. Checkboxes are user attestations. No exact audio-effect parameter values were supplied for this step; this workflow preserves the values in your approved previous project rather than inventing new ones.
-
-## Strict module access rules
-
-- Only Module 01 starts unlocked in **each** format.
-- Unlock next module only when **all** practical checklist items are checked **and** quiz is answered correctly in the current module.
-- A locked sidebar entry/card is disabled and marked with a lock. Typing a locked module's URL directly shows a lock screen instead of the lesson. The Next button cannot bypass the requirement.
-- Rechecking an earlier completed module can re-lock later lessons; completed later lessons retain their saved data but are not counted as active until prior modules are complete again.
-- Progress stored in localStorage is a learning convenience, not tamper-resistant server authentication. Editors with browser storage access can change their own records.
-
-## Original screenshots and sequence settings
-
-| Source screenshot | File in website | Exact visible settings |
-| --- | --- | --- |
-| Short format export | `assets/original-screenshots/short-format-export-original.png` | 1080 × 1920, 25 fps, VBR 2 pass, 20/20 Mbps, max depth on, max render quality on, AAC 384 kbps |
-| Long format export | `assets/original-screenshots/long-format-export-original.png` | 3840 × 2160, 23.976 fps, VBR 2 pass, 30/30 Mbps, max depth on, max render quality on, AAC 384 kbps |
-| Audio Track Mixer | `assets/original-screenshots/audio-track-mixer-original.png` | Copy Track Effects from old project, Paste Track Effects into delivery sequence |
-
-The original *sequence settings* screenshots appeared earlier in the conversation but the underlying files were not accessible in this active folder; text reproduces their visible values in the site. If the two raw image files are provided again, they can be added without altering the site architecture.
-
-
-## November 2026 update — screenshot-only Settings and filenames
-
-The **Settings** page shows only the user-provided *original* screenshot images (Short Export, Long Export, Audio Track Mixer). There are no editable settings controls or recreated Premiere Pro panels. Screenshots are full-height, uncropped, clickable original files. The two earlier **Sequence Settings** screenshot source files were not available in this deliverable; they were deliberately **not** recreated or falsely presented as originals.
-
-Delivery names:
-- Short first draft: `SF_<video name>_1st draft.mp4`
-- Short final: `SF_<video name>_Final.mp4`
-- Long first draft: `LF_<video name>_1st draft.mp4`
-- Long final: `LF_<video name>_Final.mp4`
-
-The `v01_rough / v02_locked / v03_final` naming was removed from onboarding content. For Premiere sequences, use the descriptive name without the `.mp4` extension.
-
-The GitHub Actions deployment workflow uses explicit `ubuntu-24.04` and updated GitHub actions versions.
-
-
-## Team-requested course updates
-
-- **Footage & B-Roll** now requires a relevant on-screen visual change every **5–10 seconds**, including video, image, super text, B-roll, or graphic, for both formats.
-- Module quiz progression is **1, 1, 2, 3, 4, 5, 6, 7** correct answers, plus checklist completion, before the next module unlocks. Wrong answers can be retried. Prior browser progress is preserved; previously passed one-question quizzes count toward question 1 only.
-- Welcome & Setup includes an illustrated folder tree and the **assignment raw-files** Google Drive folder with a note to choose any one reel. Sound & Color and the pre-export workflow include the approved **audio preset** Google Drive file.
-- Footer credit reads **Made by Senior Editor Md Irfan Raza**.
-- Settings page still contains **only the unmodified original screenshots**, without recreated Premiere settings panels.
+### Existing source
+Adapted from the uploaded Video Editing SOP and the previous FRAMEWORK GitHub site. The original source SOP remains at `reference/Video_Editing_SOP.html`. The screenshot PNGs in `assets/original-screenshots/` are untouched.

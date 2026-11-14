@@ -1,0 +1,6 @@
+name = "sop-assignment-email"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+# DO NOT put RESEND_API_KEY, REVIEWER_EMAIL, SENDER_EMAIL in this file.
+# Configure these with: npx wrangler secret put NAME
