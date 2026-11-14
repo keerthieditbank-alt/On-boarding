@@ -1,0 +1,2 @@
+FRAMEWORK SOP v7 · 2026-11-14 · MONO EDITION · RAW FILES FIRST / SUBMISSION LAST / RESET EVERYTHING
+This release shows registration before the dashboard and embeds screenshot images in index.html.
