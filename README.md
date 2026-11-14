@@ -28,6 +28,20 @@ A ready-to-deploy, **static GitHub Pages website** for onboarding video editors.
 
 The app is also testable directly by opening `index.html` in a desktop browser. Some browsers restrict local iframe access; run `python -m http.server 8000` and visit `http://localhost:8000` for best local testing.
 
+## GitHub Actions maintenance (November 2026)
+
+The workflow at `.github/workflows/deploy.yml` uses Node.js 24-compatible
+GitHub Pages actions (`checkout@v6`, `configure-pages@v6`,
+`upload-pages-artifact@v5`, `deploy-pages@v5`) and pins the runner to
+`ubuntu-24.04` instead of `ubuntu-latest`. This prevents the reported
+Node.js 20 deprecation warning from the legacy Pages artifact uploader and
+avoids the Ubuntu 26 migration notices for this workflow.
+
+**Existing GitHub repository:** replace only `.github/workflows/deploy.yml`
+with this version, commit the change to `main`, and inspect the next run in
+Actions. Previously completed runs retain their historical warnings.
+Actual deployment success must be checked on GitHub after pushing.
+
 ## Files
 
 | File | Purpose |
@@ -91,3 +105,27 @@ The site **cannot** access Premiere Pro, transfer effects itself or verify audio
 | Audio Track Mixer | `assets/original-screenshots/audio-track-mixer-original.png` | Copy Track Effects from old project, Paste Track Effects into delivery sequence |
 
 The original *sequence settings* screenshots appeared earlier in the conversation but the underlying files were not accessible in this active folder; text reproduces their visible values in the site. If the two raw image files are provided again, they can be added without altering the site architecture.
+
+
+## November 2026 update — screenshot-only Settings and filenames
+
+The **Settings** page shows only the user-provided *original* screenshot images (Short Export, Long Export, Audio Track Mixer). There are no editable settings controls or recreated Premiere Pro panels. Screenshots are full-height, uncropped, clickable original files. The two earlier **Sequence Settings** screenshot source files were not available in this deliverable; they were deliberately **not** recreated or falsely presented as originals.
+
+Delivery names:
+- Short first draft: `SF_<video name>_1st draft.mp4`
+- Short final: `SF_<video name>_Final.mp4`
+- Long first draft: `LF_<video name>_1st draft.mp4`
+- Long final: `LF_<video name>_Final.mp4`
+
+The `v01_rough / v02_locked / v03_final` naming was removed from onboarding content. For Premiere sequences, use the descriptive name without the `.mp4` extension.
+
+The GitHub Actions deployment workflow uses explicit `ubuntu-24.04` and updated GitHub actions versions.
+
+
+## Team-requested course updates
+
+- **Footage & B-Roll** now requires a relevant on-screen visual change every **5–10 seconds**, including video, image, super text, B-roll, or graphic, for both formats.
+- Module quiz progression is **1, 1, 2, 3, 4, 5, 6, 7** correct answers, plus checklist completion, before the next module unlocks. Wrong answers can be retried. Prior browser progress is preserved; previously passed one-question quizzes count toward question 1 only.
+- Welcome & Setup includes an illustrated folder tree and the **assignment raw-files** Google Drive folder with a note to choose any one reel. Sound & Color and the pre-export workflow include the approved **audio preset** Google Drive file.
+- Footer credit reads **Made by Senior Editor Md Irfan Raza**.
+- Settings page still contains **only the unmodified original screenshots**, without recreated Premiere settings panels.

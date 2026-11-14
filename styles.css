@@ -57,3 +57,38 @@
 .sequence-source-note{margin:13px 0 19px;padding:15px 16px;font-size:12px;line-height:1.8;color:#415a67;background:#eaf5f8;border:1px solid #c6e6ee;border-radius:10px}
 .sequence-source-note strong{color:#194b60}
 @media(max-width:580px){.original-shot{padding:12px;margin:17px 0}.original-shot-window{max-height:520px}.original-shot-heading h3{font-size:16px}.lock-screen{padding:30px 19px;margin-top:24px}}
+
+/* Screenshot-only reference layout — display user images directly, without clipping. */
+.shot-page{max-width:1190px;margin:34px auto 90px}
+.shot-page h1{font-size:clamp(26px,3vw,37px);font-weight:900;letter-spacing:-.04em;color:#213c4c;margin:0 0 26px}
+.screenshots-only-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:23px;align-items:start}
+.screenshot-only-item{margin:20px 0 30px;padding:18px;border-radius:15px;background:#fff;border:1px solid #dee9ee;min-width:0}
+.screenshot-only-item figcaption{font:800 14px 'Space Grotesk', sans-serif;color:#284657;margin:0 0 15px}
+.screenshot-only-item a{display:flex;justify-content:center;width:100%;line-height:0;cursor:zoom-in}
+.screenshot-only-item img{display:block;height:auto;width:auto;max-width:100%;object-fit:contain;object-position:top center;border:0;border-radius:5px}
+.screenshot-mixer img{width:100%;max-width:100%;height:auto}
+.screenshot-mixer{margin-top:4px}
+.file-naming-note{font-size:12px;color:#3f6575;background:#eff8fa;border:1px solid #d7e8eb;border-radius:10px;padding:12px 13px;line-height:1.9;margin-bottom:14px;overflow-wrap:anywhere}
+@media(max-width:700px){.shot-page{margin-top:21px}.screenshots-only-grid{grid-template-columns:1fr;gap:3px}.screenshot-only-item{padding:12px;margin:14px 0 23px}.shot-page h1{margin-bottom:18px}}
+
+/* 2026 course resources, original screenshot layout, expanding quizzes and footer credit */
+.resources-panel{border-color:#d7e9ef}
+.resources-panel h2{margin-bottom:12px}
+.resources-panel p strong{color:#314f60}
+.file-tree{background:#f7fbfc;border:1px solid #dae9ee;border-radius:14px;padding:17px;display:grid;gap:6px;font:600 12px 'DM Sans',system-ui,sans-serif;color:#335466;margin:15px 0}
+.tree-row{padding:8px 12px;background:white;border:1px solid #e8eff2;border-radius:7px;display:flex;gap:10px;align-items:center;min-width:0;flex-wrap:wrap;overflow-wrap:anywhere}
+.tree-row span{font-size:15px;flex-shrink:0}.tree-row small{color:#91a3ac;font-size:10px;margin-left:auto;font-weight:500}
+.tree-row.root-row{font-weight:900;background:#e6f7fd;border-color:#d2ebf5;color:#237c9b}
+.tree-row.depth1{margin-left:14px}.tree-row.depth2{margin-left:35px;color:#617c89}
+.resource-note{font-size:11px!important;color:#8597a1!important}
+.resource-button{display:inline-flex;align-items:center;gap:7px;background:#203b48;color:white;font-size:12px;font-weight:800;padding:12px 16px;border-radius:10px;margin-top:15px;text-decoration:none}
+.resource-button:hover{background:#2a6074}
+.quiz-intro{font-size:12px;color:#7e8f98;margin-bottom:13px}
+.quiz-counter{font-size:12px;font-weight:900;background:#edf9f1;color:#37875b;display:inline-block;border:1px solid #cae8d5;border-radius:16px;padding:7px 11px;margin:7px 0 15px}
+.question-block{padding:20px 0;border-top:1px solid #e8eff0}
+.question-block:first-of-type{border-top:none}
+.question-number{font-size:10px;font-weight:900;color:#268fb5;letter-spacing:.12em}
+.question-block .quiz-question{margin-top:8px}
+.final-preset-resource{font-size:12px;color:#546b79;margin:17px 0}
+.foot{line-height:1.7}.foot span:last-child{font-weight:900;color:#476476}
+@media(max-width:600px){.tree-row small{margin-left:0;width:100%;padding-left:26px}.tree-row.depth2{margin-left:21px}.file-tree{padding:10px}.question-block{padding:16px 0}}
