@@ -5,9 +5,11 @@ A ready-to-deploy, **static GitHub Pages website** for onboarding video editors.
 ## Features
 
 - **Two independent modes:** Short Format (9:16) and Long Format (16:9).
+- **Preserved source screenshots:** the exact original uploaded **Short Form Export**, **Long Form Export**, and **Audio Track Mixer** PNG files are included in `assets/original-screenshots/` with no edits, cropping, regeneration, or compression. View on Settings, Module 01, Module 08, or Final Edit; click **Open full original** to view at native resolution.
+- **Sequence settings:** values from the user-provided sequence screenshots are written into the modules and Settings; the original sequence image files themselves were not present in the files available for packaging, so images are **not** imitated or regenerated.
 - **Editable format settings:** aspect ratio, resolution, FPS, duration, hook, pacing, subtitles, platform, safe-area notes; dedicated Premiere Pro **export settings** with bitrate encoding, target/max bitrate, color space, field order, AAC audio and quality controls.
-- **Long-format export presets:** one click applies YouTube 1080p or 4K H.264 delivery defaults (always verify source frame rate). Download a plain-text export settings handoff sheet for either format.
-- **Eight guided modules** per format with detailed lessons, format-specific tips, practical checklists and quick-check quizzes.
+- **Long-format export presets:** one click applies an alternative YouTube 1080p preset or restores the uploaded 4K screenshot values (always verify source frame rate). Download a plain-text export settings handoff sheet for either format.
+- **Eight guided modules** per format with detailed lessons, format-specific tips, practical checklists and quick-check quizzes. **Sequential locking**: only Module 01 is open initially; Module 02 unlocks after Module 01 has every task checked AND the quiz correct, and so forth. Deep links also respect the lock. Progress/unlocking is independent for Short and Long.
 - **Separate progress tracking:** each format has its own module statuses and completion percentage.
 - **SOP library:** includes the supplied complete original SOP with searchable section shortcuts and an embedded reading view.
 - **Mandatory pre-export Audio Track Mixer handoff:** copy approved effect racks from the previous reference project into the new delivery sequence, verify routing/levels, log the source and complete an auditable checklist before delivery. The transfer is done manually in Premiere Pro, not by the website.
@@ -35,6 +37,7 @@ The app is also testable directly by opening `index.html` in a desktop browser. 
 | `data.js` | All module, quiz, checklist and format-default content |
 | `app.js` | Navigation, progress, settings, reports and data persistence |
 | `reference/Video_Editing_SOP.html` | Your original SOP, preserved |
+| `assets/original-screenshots/` | Your untouched Short and Long export PNGs, plus original Audio Track Mixer PNG |
 | `.github/workflows/deploy.yml` | Automatic GitHub Pages deployment |
 | `.nojekyll` | Serve root files as static files |
 
@@ -53,7 +56,7 @@ For shared logins, reviewer dashboards, actual video uploads or sync across edit
 
 All SOP lessons and quiz answers live in `data.js`. Format defaults can be changed in `formats.short.defaults` and `formats.long.defaults`. Each user can also customize their personal format settings inside the website.
 
-Content is adapted to your uploaded SOP. The YouTube 1080p and 4K presets are **example team targets** rather than an exact extraction of a screenshot or universal technical requirements; always follow the project brief and your delivery platform's latest requirements.
+Content is adapted to your uploaded SOP. The default screenshot-matching values are **Short:** 1080 × 1920 / 25 fps / VBR 2-pass / 20 and 20 Mbps / AAC 384 kbps; **Long:** 3840 × 2160 / 23.976 fps / VBR 2-pass / 30 and 30 Mbps / AAC 384 kbps. The optional YouTube 1080p preset is different from the supplied screenshots; always follow the project brief and your delivery platform's latest requirements.
 
 ## Mandatory Adobe Premiere Pro Audio Track Mixer transfer
 
@@ -70,3 +73,21 @@ Perform this **after editing but before exporting**, on **each deliverable** (bo
 Adobe official reference: https://helpx.adobe.com/premiere/desktop/add-audio-effects/apply-audio-effects/copy-and-move-effects-in-audio-track-mixer.html
 
 The site **cannot** access Premiere Pro, transfer effects itself or verify audio. Checkboxes are user attestations. No exact audio-effect parameter values were supplied for this step; this workflow preserves the values in your approved previous project rather than inventing new ones.
+
+## Strict module access rules
+
+- Only Module 01 starts unlocked in **each** format.
+- Unlock next module only when **all** practical checklist items are checked **and** quiz is answered correctly in the current module.
+- A locked sidebar entry/card is disabled and marked with a lock. Typing a locked module's URL directly shows a lock screen instead of the lesson. The Next button cannot bypass the requirement.
+- Rechecking an earlier completed module can re-lock later lessons; completed later lessons retain their saved data but are not counted as active until prior modules are complete again.
+- Progress stored in localStorage is a learning convenience, not tamper-resistant server authentication. Editors with browser storage access can change their own records.
+
+## Original screenshots and sequence settings
+
+| Source screenshot | File in website | Exact visible settings |
+| --- | --- | --- |
+| Short format export | `assets/original-screenshots/short-format-export-original.png` | 1080 × 1920, 25 fps, VBR 2 pass, 20/20 Mbps, max depth on, max render quality on, AAC 384 kbps |
+| Long format export | `assets/original-screenshots/long-format-export-original.png` | 3840 × 2160, 23.976 fps, VBR 2 pass, 30/30 Mbps, max depth on, max render quality on, AAC 384 kbps |
+| Audio Track Mixer | `assets/original-screenshots/audio-track-mixer-original.png` | Copy Track Effects from old project, Paste Track Effects into delivery sequence |
+
+The original *sequence settings* screenshots appeared earlier in the conversation but the underlying files were not accessible in this active folder; text reproduces their visible values in the site. If the two raw image files are provided again, they can be added without altering the site architecture.

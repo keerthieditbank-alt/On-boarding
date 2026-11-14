@@ -4,13 +4,13 @@ window.SOP_DATA = (() => {
     short: {
       name: 'Short Format', shortName: 'Shorts / Reels', icon: '▣', tag: 'VERTICAL',
       summary: 'High-retention vertical editing for Reels, Shorts and TikTok.',
-      defaults: { resolution:'1080 × 1920', ratio:'9:16', fps:'30', duration:'30–60 sec', hook:'0–3 sec', visual:'2–5 sec', subtitles:'On', bitrate:'16 Mbps', maxBitrate:'20 Mbps', exportFormat:'H.264 / MP4', bitrateEncoding:'VBR, 1 pass', fieldOrder:'Progressive', pixelAspect:'Square Pixels (1.0)', colorSpace:'Rec.709', audioCodec:'AAC', audioSampleRate:'48000 Hz', audioBitrate:'320 kbps', renderQuality:'Maximum Render Quality: On', safeZone:'Keep key text clear of top/bottom UI', platform:'Instagram Reels / YouTube Shorts' },
+      defaults: { resolution:'1080 × 1920', ratio:'9:16', fps:'25', duration:'30–60 sec', hook:'0–3 sec', visual:'2–5 sec', subtitles:'On', bitrate:'20 Mbps', maxBitrate:'20 Mbps', exportFormat:'H.264 / MP4', bitrateEncoding:'VBR, 2 pass', fieldOrder:'Progressive', pixelAspect:'Square Pixels (1.0)', colorSpace:'Rec.709', audioCodec:'AAC', audioSampleRate:'48000 Hz', audioBitrate:'384 kbps', renderQuality:'Maximum Render Quality: On', renderDepth:'Render at Maximum Depth: On', performance:'Software Encoding', timeInterpolation:'Frame Sampling', safeZone:'Keep key text clear of top/bottom UI', platform:'Instagram Reels / YouTube Shorts' },
       heroNote:'Every second counts. Deliver one clear idea with a hook, tight pacing, purposeful graphics and an unmistakable payoff.'
     },
     long: {
       name: 'Long Format', shortName: 'YouTube / Documentary', icon: '▤', tag: 'HORIZONTAL',
       summary: 'Story-first editing for YouTube essays, interviews and documentaries.',
-      defaults: { resolution:'1920 × 1080', ratio:'16:9', fps:'25', duration:'8–20 min', hook:'0–30 sec', visual:'10–20 sec', subtitles:'Selective', bitrate:'16 Mbps', maxBitrate:'25 Mbps', exportFormat:'H.264 / MP4', bitrateEncoding:'VBR, 1 pass', fieldOrder:'Progressive', pixelAspect:'Square Pixels (1.0)', colorSpace:'Rec.709', audioCodec:'AAC', audioSampleRate:'48000 Hz', audioBitrate:'320 kbps', renderQuality:'Maximum Render Quality: On', safeZone:'Keep titles within action-safe margins', platform:'YouTube' },
+      defaults: { resolution:'3840 × 2160', ratio:'16:9', fps:'23.976', duration:'8–20 min', hook:'0–30 sec', visual:'10–20 sec', subtitles:'Selective', bitrate:'30 Mbps', maxBitrate:'30 Mbps', exportFormat:'H.264 / MP4', bitrateEncoding:'VBR, 2 pass', fieldOrder:'Progressive', pixelAspect:'Square Pixels (1.0)', colorSpace:'Rec.709', audioCodec:'AAC', audioSampleRate:'48000 Hz', audioBitrate:'384 kbps', renderQuality:'Maximum Render Quality: On', renderDepth:'Render at Maximum Depth: On', performance:'Software Encoding', timeInterpolation:'Frame Sampling', safeZone:'Keep titles within action-safe margins', platform:'YouTube' },
       heroNote:'The story leads. Let real moments breathe, build emotional rhythm and make the editing feel invisible.'
     }
   };
