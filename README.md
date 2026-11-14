@@ -1,4 +1,12 @@
-## Latest v7 changes
+## Latest v8 changes (14 Nov 2026)
+- **Short Format Raw Files:** https://drive.google.com/drive/folders/1egBN0TJipvxXzDK7aiCJ3d6Hx7l7pkxL?usp=sharing
+- **Long Format Raw Files:** https://drive.google.com/drive/folders/168yjZdHgiXRlrUcnsguGLLtfbEAxaGMG?usp=sharing
+- The dashboard/Final Edit top banner and Module 1 resources open the relevant format's folder based on the selected Short/Long format.
+- Final Edit layout: **Raw Files link → Final Quality Checklist → Audio Track Mixer reference & steps → Assignment Submission → Report**. The audio mixer remains a required pre-export transfer and verification step, even though it is displayed after the checklist as requested.
+- Registration, progressive module unlocking, screenshots, email backend template, report and reset are unchanged.
+- Replace the live GitHub Pages root `index.html` and deploy again. Check `BUILD_VERSION.txt` for v8.
+
+## Previous v7 changes
 - The first page on every full load is the **Name / Mobile / Email registration form**. A different editor gets clean 0/8 course progress.
 - **Open raw files & download** appears above the dashboard hero and at the top of Final Edit, linking to the user's Google Drive assignment folder with multiple reels to choose from. Google Drive controls download and sharing permissions.
 - **Final Edit order:** raw footage link → audio mixer gate → full quality checklist → assignment submission at the very bottom → downloadable report. Assignment form is no longer beside the checklist.
