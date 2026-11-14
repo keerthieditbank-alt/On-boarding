@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Editing SOP</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #191919;
+    --surface: #222222;
+    --surface2: #2a2a2a;
+    --border: #333333;
+    --text: #e8e8e8;
+    --text-muted: #888;
+    --text-dim: #555;
+    --accent: #4f8ef7;
+    --accent-soft: rgba(79,142,247,0.12);
+    --green: #4caf7d;
+    --green-soft: rgba(76,175,125,0.12);
+    --yellow: #f5c842;
+    --yellow-soft: rgba(245,200,66,0.12);
+    --red: #e05c5c;
+    --red-soft: rgba(224,92,92,0.12);
+    --purple: #a78bfa;
+    --purple-soft: rgba(167,139,250,0.12);
+    --orange: #f97316;
+    --orange-soft: rgba(249,115,22,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    padding: 20px 0 40px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .sidebar-logo {
+    padding: 0 18px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .sidebar-logo span {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .sidebar-logo h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 4px;
+  }
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 12px 18px 4px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 18px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 0;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { color: var(--accent); background: var(--accent-soft); border-left-color: var(--accent); }
+  .nav-item .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+  .nav-badge {
+    margin-left: auto;
+    font-size: 10px;
+    background: var(--surface2);
+    color: var(--text-dim);
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Main content */
+  .main {
+    margin-left: 260px;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    background: rgba(25,25,25,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+  }
+  .breadcrumb {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .breadcrumb span { color: var(--text); font-weight: 500; }
+  .topbar-actions { display: flex; gap: 8px; }
+  .tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .tag-blue { background: var(--accent-soft); color: var(--accent); }
+  .tag-green { background: var(--green-soft); color: var(--green); }
+
+  /* Page content */
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 48px 120px;
+  }
+
+  .page-hero {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-emoji { font-size: 56px; margin-bottom: 16px; display: block; }
+  .page-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .page-subtitle {
+    font-size: 16px;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .meta-item { display: flex; align-items: center; gap: 6px; }
+  .meta-item strong { color: var(--text); }
+
+  /* Sections */
+  .section {
+    margin-bottom: 56px;
+    scroll-margin-top: 80px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border-radius: 10px;
+    border-left: 4px solid var(--accent);
+  }
+  .section-icon { font-size: 22px; }
+  .section-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  /* Subsections */
+  .subsection {
+    margin-bottom: 32px;
+    padding: 24px;
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .subsection-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .subsection-title .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .subsection-desc {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  /* Point list */
+  .point-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .point-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 7px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.55;
+    transition: border-color 0.15s;
+  }
+  .point-item:hover { border-color: #444; }
+  .point-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .point-dot.green { background: var(--green); }
+  .point-dot.yellow { background: var(--yellow); }
+  .point-dot.purple { background: var(--purple); }
+  .point-dot.orange { background: var(--orange); }
+  .point-text { flex: 1; }
+  .point-text strong { color: var(--accent); font-weight: 600; }
+  .point-text .why {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  /* Numbered steps */
+  .step-list { display: flex; flex-direction: column; gap: 10px; }
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+  .step-num {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .step-desc { font-size: 13px; color: var(--text-muted); margin-top: 2px; line-height: 1.5; }
+
+  /* Callout boxes */
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout.note { background: var(--yellow-soft); border: 1px solid rgba(245,200,66,0.25); color: #e0c96e; }
+  .callout.rule { background: var(--red-soft); border: 1px solid rgba(224,92,92,0.25); color: #e08080; }
+  .callout.tip { background: var(--green-soft); border: 1px solid rgba(76,175,125,0.25); color: #70c490; }
+  .callout.info { background: var(--accent-soft); border: 1px solid rgba(79,142,247,0.25); color: #80b0f5; }
+
+  /* Grid layouts */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  .card {
+    padding: 16px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .card-items { display: flex; flex-direction: column; gap: 6px; }
+  .card-item {
+    font-size: 13px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-item::before { content: '→'; color: var(--accent); font-size: 12px; }
+
+  /* Sub-heading inside subsection */
+  .sub-heading {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin: 16px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sub-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Pattern block */
+  .pattern-block {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .pattern-step {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .p1 { background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+  .p2 { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+  .p3 { background: rgba(76,175,125,0.15); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
+  .pattern-step .label { font-size: 10px; opacity: 0.7; font-weight: 400; margin-top: 2px; }
+
+  /* Quick ref */
+  .quick-ref {
+    background: linear-gradient(135deg, rgba(79,142,247,0.08), rgba(167,139,250,0.08));
+    border: 1px solid rgba(79,142,247,0.3);
+    border-radius: 12px;
+    padding: 28px;
+    margin-top: 48px;
+  }
+  .quick-ref-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .rule-chip {
+    padding: 10px 14px;
+    background: var(--surface);
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .rule-chip .r-icon { font-size: 16px; flex-shrink: 0; }
+
+  /* TOC */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 48px;
+  }
+  .toc-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .toc-link {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .toc-link:hover { background: var(--surface2); color: var(--text); }
+  .toc-link .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    width: 20px;
+    flex-shrink: 0;
+  }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  /* Scroll */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .page { padding: 32px 20px 80px; }
+    .grid-2, .grid-3, .rules-grid, .toc-grid { grid-template-columns: 1fr; }
+    .topbar { padding: 12px 20px; }
+    .pattern-block { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <span>Content Studio</span>
+    <h2>📋 Editing SOP</h2>
+  </div>
+  <div class="nav-section-label">Sections</div>
+  <a class="nav-item active" href="#s1"><span class="nav-icon">🎯</span> Pre-Edit Planning <span class="nav-badge">1</span></a>
+  <a class="nav-item" href="#s2"><span class="nav-icon">📁</span> File Management <span class="nav-badge">2</span></a>
+  <a class="nav-item" href="#s3"><span class="nav-icon">🎬</span> Footage Review <span class="nav-badge">3</span></a>
+  <a class="nav-item" href="#s4"><span class="nav-icon">🗺️</span> On-Location Doc <span class="nav-badge">4</span></a>
+  <a class="nav-item" href="#s5"><span class="nav-icon">✂️</span> Editing Flow <span class="nav-badge">5</span></a>
+  <a class="nav-item" href="#s6"><span class="nav-icon">🎞️</span> Visual & B-Roll <span class="nav-badge">6</span></a>
+  <a class="nav-item" href="#s7"><span class="nav-icon">✨</span> Animations <span class="nav-badge">7</span></a>
+  <a class="nav-item" href="#s8"><span class="nav-icon">🔊</span> Sound Design <span class="nav-badge">8</span></a>
+  <a class="nav-item" href="#s9"><span class="nav-icon">🎨</span> Color & Export <span class="nav-badge">9</span></a>
+  <a class="nav-item" href="#quickref"><span class="nav-icon">⚡</span> Quick Reference</a>
+  <div class="nav-section-label" style="margin-top:16px;">Info</div>
+  <div class="nav-item"><span class="nav-icon">📄</span> Version 1.0</div>
+  <div class="nav-item"><span class="nav-icon">👤</span> For All Editors</div>
+</nav>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <div class="breadcrumb">Content Studio › SOPs › <span>Video Editing SOP</span></div>
+    <div class="topbar-actions">
+      <span class="tag tag-green">✓ Active</span>
+      <span class="tag tag-blue">v1.0</span>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- Hero -->
+    <div class="page-hero">
+      <span class="page-emoji">🎬</span>
+      <h1 class="page-title">Video Editing SOP</h1>
+      <p class="page-subtitle">Standard Operating Procedure — Complete guide for every editor on the team. Read this fully before editing your first video.</p>
+      <div class="meta-row">
+        <div class="meta-item">📌 <strong>Type:</strong> Standard Operating Procedure</div>
+        <div class="meta-item">🎯 <strong>Applies to:</strong> All video editors</div>
+        <div class="meta-item">📹 <strong>Covers:</strong> Talking Head + Documentary</div>
+        <div class="meta-item">⚙️ <strong>Tool:</strong> Adobe Premiere Pro + After Effects</div>
+      </div>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc">
+      <div class="toc-title">📑 Table of Contents</div>
+      <div class="toc-grid">
+        <a class="toc-link" href="#s1"><span class="toc-num">01</span> Pre-Edit Planning</a>
+        <a class="toc-link" href="#s2"><span class="toc-num">02</span> File Management & Setup</a>
+        <a class="toc-link" href="#s3"><span class="toc-num">03</span> Footage Review</a>
+        <a class="toc-link" href="#s4"><span class="toc-num">04</span> On-Location Documentary</a>
+        <a class="toc-link" href="#s5"><span class="toc-num">05</span> Editing Flow & Workflow</a>
+        <a class="toc-link" href="#s6"><span class="toc-num">06</span> Visual Layering & B-Roll</a>
+        <a class="toc-link" href="#s7"><span class="toc-num">07</span> Animations & Effects</a>
+        <a class="toc-link" href="#s8"><span class="toc-num">08</span> Sound Design</a>
+        <a class="toc-link" href="#s9"><span class="toc-num">09</span> Color Grading & Export</a>
+      </div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="section" id="s1">
+      <div class="section-header">
+        <span class="section-icon">🎯</span>
+        <div>
+          <div class="section-number">Section 01</div>
+          <div class="section-title">Pre-Edit Planning</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">1.1</span> Video Goal — The First Thing You Must Define</div>
+        <div class="subsection-desc">Before you open Premiere Pro, you need to understand WHY this video exists. Every editing decision — cuts, B-roll, pacing, music — flows from answering these three questions. Skipping this step leads to random, unfocused edits.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Content Direction</strong> — What is this video about? What topic, story, or message is being communicated? Read the script or watch a rough cut first.<span class="why">Why: Your B-roll choices, pacing, and text style all depend on the subject matter.</span></span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Audience Feel</strong> — How should the viewer feel while watching? Inspired? Curious? Shocked? Informed?<span class="why">Why: The emotion you want to create determines your music choice, color grade, and cut rhythm.</span></span></li>
+          <li class="point-item"><span class="point-dot purple"></span><span class="point-text"><strong>Video Goal</strong> — What is the business or content outcome of this video?<span class="why">Why: A "views" video needs a punchy hook; a "sales" video needs trust-building pacing. The goal changes everything.</span></span></li>
+        </ul>
+        <div style="margin-top:12px;">
+        <div class="grid-2">
+          <div class="card"><div class="card-title">🎯 Goal Types</div><div class="card-items"><div class="card-item">Views — viral potential, fast cuts</div><div class="card-item">Engagement — comments, questions, reactions</div><div class="card-item">Sales / Branding — trust, credibility</div><div class="card-item">Impact — emotional, slow-burn storytelling</div></div></div>
+          <div class="card"><div class="card-title">✅ Before You Start Checklist</div><div class="card-items"><div class="card-item">Read the script or brief</div><div class="card-item">Know the target platform (YouTube/Instagram)</div><div class="card-item">Know the target video length</div><div class="card-item">Know the audience (age, interest, language)</div></div></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">1.2</span> Core Editing Objectives — Non-Negotiable Standards</div>
+        <div class="subsection-desc">These are the baseline quality standards for every single video we produce. No exceptions. Internalize these — they define our editing style.</div>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-content"><div class="step-title">Maintain Premium Documentary-Style Quality</div><div class="step-desc">Every video should look like it took 10x more effort than it did. Clean cuts, intentional B-roll, and professional color grading are mandatory — not optional.</div></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-content"><div class="step-title">Ensure Fast Turnaround</div><div class="step-desc">Quality is expected AND speed is expected. Use templates, presets, and hotkeys to work fast without cutting corners on quality.</div></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-content"><div class="step-title">Keep Consistency Across All Editing</div><div class="step-desc">Every video from our channel should look like it came from the same editor. Same font style, same color palette, same energy level. Viewers should recognize our visual brand instantly.</div></div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-content"><div class="step-title">Avoid Repetitive B-Roll and Animations</div><div class="step-desc">Do not reuse the same B-roll clip or animation style within a single video. Repetition kills viewer retention. Every visual should feel fresh.</div></div></div>
+          <div class="step-item"><div class="step-num">5</div><div class="step-content"><div class="step-title">Change Scene Every 10–20 Seconds</div><div class="step-desc">The viewer's attention resets every ~15 seconds. Use B-roll, animation, zoom, or text overlays to create a visual change at this interval. This is the single biggest driver of watch time.</div></div></div>
+          <div class="step-item"><div class="step-num">6</div><div class="step-content"><div class="step-title">Video Must Look Engaging + Credible + Cinematic</div><div class="step-desc">All three together. Engaging = viewer doesn't click away. Credible = viewer trusts the content. Cinematic = viewer is visually impressed. If any one of these is missing, the video fails.</div></div></div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">1.3</span> Talking Head / Sit & Talk Videos — What the Viewer Should Experience</div>
+        <div class="subsection-desc">This video type is the most common format. The speaker is on camera talking directly to the audience. Your job as an editor is to make the speaker look like a professional, authoritative storyteller — without making the edit itself visible.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Viewer must never be confused</strong> — If a viewer has to pause and re-watch something, you have failed as an editor. Every cut must flow logically.<span class="why">Why: Confused viewers leave. Clear, flowing content keeps them watching.</span></span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Must have engaging storytelling</strong> — The raw footage is just words. Your job is to turn those words into a story with rhythm, tension, and payoff.<span class="why">Why: People don't watch videos — they watch stories.</span></span></li>
+          <li class="point-item"><span class="point-dot yellow"></span><span class="point-text"><strong>Simple and clean, but premium-feeling</strong> — Don't clutter the screen with unnecessary graphics. But every element that IS on screen must look high quality.<span class="why">Why: Over-designed videos feel cheap and amateurish. Restrained design feels expensive.</span></span></li>
+        </ul>
+        <div class="callout rule"><span class="callout-icon">🚫</span><div><strong>Golden Rule:</strong> The editor should be completely invisible in the final video. The viewer should only be aware of the speaker and the story — never aware of the editing. If someone watches and thinks "wow, nice editing" — you've broken this rule.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">1.4</span> AI Tool — How to Use It Correctly</div>
+        <div class="subsection-desc">We have an AI tool that analyzes the script and raw footage to suggest where to add B-roll, animations, and text highlights. Use it as your starting point — not your final answer.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Where to place B-roll</strong> — AI will flag moments where a visual reference would help the viewer understand or feel something.</span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Which B-roll to use</strong> — Suggestions based on keywords in the script. Always review manually before placing.</span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Where to use animations</strong> — Spots where a motion graphic would reinforce the point being made.</span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Where to add text highlights</strong> — Key phrases that should be visually emphasized on screen.</span></li>
+        </ul>
+        <div class="callout note"><span class="callout-icon">⚠️</span><div><strong>Important:</strong> The AI tool is a starting suggestion, not a final decision. It does not understand the emotional arc of the video the way you do. Always apply your own creative judgment to accept, reject, or modify its suggestions.</div></div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="s2">
+      <div class="section-header">
+        <span class="section-icon">📁</span>
+        <div>
+          <div class="section-number">Section 02</div>
+          <div class="section-title">File Management & Project Setup</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">2.1</span> Folder Structure — Organize Before You Edit</div>
+        <div class="subsection-desc">Every project MUST be organized into the same folder structure before editing begins. A messy project folder leads to missing files, slow renders, and wasted time. Always do this first.</div>
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-title">📂 Required Folder Structure (per project)</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text); line-height:2; padding:8px 0;">
+            📁 [Video Topic Name]/<br>
+            &nbsp;&nbsp;&nbsp;├── 📁 Raw Files/ &nbsp;<span style="color:var(--text-muted); font-size:11px;">← Original unedited camera footage</span><br>
+            &nbsp;&nbsp;&nbsp;├── 📁 B-Roll/ &nbsp;<span style="color:var(--text-muted); font-size:11px;">← All supplementary footage</span><br>
+            &nbsp;&nbsp;&nbsp;├── 📁 Script/ &nbsp;<span style="color:var(--text-muted); font-size:11px;">← Script document and notes</span><br>
+            &nbsp;&nbsp;&nbsp;└── 📁 Project File/ &nbsp;<span style="color:var(--text-muted); font-size:11px;">← .prproj and .aep files</span>
+          </div>
+        </div>
+        <div class="callout tip"><span class="callout-icon">💡</span><div>Name the root folder with the video topic clearly. Example: "Delhi_Street_Food_Tour_July" — not just "Video1" or "NewProject". This helps when searching for old projects later.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">2.2</span> Premiere Pro Template Project — Always Start from Template</div>
+        <div class="subsection-desc">Never start from a blank Premiere Pro project. We have a pre-built template that has all the right folder structure, sequences, and settings already set up. Starting from here saves 30+ minutes per video.</div>
+        <div class="sub-heading">Project Bin Folders</div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title">Raw Files</div><div style="font-size:12px;color:var(--text-muted);">Original A-roll footage from the camera. Never edit directly from here — always duplicate to sequence first.</div></div>
+          <div class="card"><div class="card-title">B-Roll</div><div style="font-size:12px;color:var(--text-muted);">All supplementary footage, cutaways, and inserts. Organize into sub-folders if needed (e.g., "Location Shots", "Close-ups").</div></div>
+          <div class="card"><div class="card-title">Sequences</div><div style="font-size:12px;color:var(--text-muted);">Named sequences for each edit version. Use naming like "v01_rough", "v02_locked", "v03_final".</div></div>
+          <div class="card"><div class="card-title">Music</div><div style="font-size:12px;color:var(--text-muted);">Background music tracks for the video. Keep separate from SFX.</div></div>
+          <div class="card"><div class="card-title">SFX</div><div style="font-size:12px;color:var(--text-muted);">Sound effects — swooshes, transitions, ambient sounds, impact sounds.</div></div>
+        </div>
+        <div class="sub-heading">Timeline Layer Order (Top to Bottom)</div>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num" style="background:var(--accent);">V3</div><div class="step-content"><div class="step-title">B-Roll Layer</div><div class="step-desc">Place all B-roll here. If on-sit-down content, add a separate color Adjustment Layer directly above this track.</div></div></div>
+          <div class="step-item"><div class="step-num" style="background:var(--purple);">V2</div><div class="step-content"><div class="step-title">Color Adjustment Layer (A-Roll)</div><div class="step-desc">Color grade adjustment layer that sits above the A-roll. This keeps your color grade non-destructive and easy to adjust.</div></div></div>
+          <div class="step-item"><div class="step-num" style="background:var(--green);">V1</div><div class="step-content"><div class="step-title">A-Roll — Main Talking Footage</div><div class="step-desc">The main speaker footage. This is the foundation of your timeline. Everything else is layered on top of this.</div></div></div>
+          <div class="step-item"><div class="step-num" style="background:var(--yellow); color:#333;">A2</div><div class="step-content"><div class="step-title">Music Track</div><div class="step-desc">Background music. Keep at a low level — never louder than the speaker's voice.</div></div></div>
+          <div class="step-item"><div class="step-num" style="background:var(--orange);">A3</div><div class="step-content"><div class="step-title">SFX Track</div><div class="step-desc">Sound effects. Separate from music so you can adjust volume independently.</div></div></div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">2.3</span> Speed System — Work Fast Without Losing Quality</div>
+        <div class="subsection-desc">Professional editors don't use menus — they use hotkeys. Set these up on Day 1 and never touch the menu bar for common operations again.</div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title">⚡ Required Hotkeys</div><div class="card-items"><div class="card-item">C — Razor / Cut tool</div><div class="card-item">Q — Ripple Delete (left)</div><div class="card-item">W — Ripple Delete (right)</div><div class="card-item">= / + — Zoom in on timeline</div><div class="card-item">- — Zoom out on timeline</div></div></div>
+          <div class="card"><div class="card-title">🎨 Required Presets</div><div class="card-items"><div class="card-item">Zoom Preset (smooth punch-in)</div><div class="card-item">Slide Preset (horizontal slide)</div><div class="card-item">Color Grade Preset (LUT)</div><div class="card-item">Text/Lower Third Template</div></div></div>
+        </div>
+        <div class="callout tip"><span class="callout-icon">💡</span><div>Download the B-roll library link and keep a local folder organized by topic. Every time you find good free footage, add it. Over time you build a personal asset library that speeds up every project.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">2.4</span> Asset Folder — Your Creative Library</div>
+        <div class="subsection-desc">This is the master asset folder shared across all projects. Keep it organized. Never delete anything without permission.</div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title">🎞️ Video Assets</div><div class="card-items"><div class="card-item">B-Roll (by topic/category)</div><div class="card-item">Film Grain overlays</div><div class="card-item">Light Leaks</div><div class="card-item">Paper Textures</div><div class="card-item">Overlays</div></div></div>
+          <div class="card"><div class="card-title">🔊 Audio Assets</div><div class="card-items"><div class="card-item">Background Music</div><div class="card-item">Sound Effects (SFX)</div><div class="card-item">Ambient sounds</div><div class="card-item">Transition swooshes</div></div></div>
+          <div class="card"><div class="card-title">🎨 Graphics Assets</div><div class="card-items"><div class="card-item">Icons / Graphics</div><div class="card-item">After Effects Templates</div><div class="card-item">Lower thirds</div><div class="card-item">Premiere Pro presets</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="s3">
+      <div class="section-header">
+        <span class="section-icon">🎬</span>
+        <div>
+          <div class="section-number">Section 03</div>
+          <div class="section-title">Footage Review & Story Understanding</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">3.1</span> Story Understanding — Answer These Before Editing</div>
+        <div class="subsection-desc">Most editors make the mistake of jumping straight into cutting. Before you make a single cut, you need to understand the story. A great editor is 50% storyteller, 50% technician.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>What is the story of this video?</strong><span class="why">What journey does the viewer go on from the first second to the last? What is the beginning, middle, and end?</span></span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>What is the core emotion?</strong><span class="why">Pick ONE dominant emotion: curiosity, tension, excitement, nostalgia, inspiration, humor. Every editing choice should support this emotion.</span></span></li>
+          <li class="point-item"><span class="point-dot yellow"></span><span class="point-text"><strong>What should the viewer feel at the end?</strong><span class="why">The ending emotion is the most important. Should they feel motivated? Shocked? Entertained? This shapes how you build the entire video.</span></span></li>
+        </ul>
+        <div class="callout info"><span class="callout-icon">📌</span><div>Emotion types to consider: <strong>Curiosity</strong> (mystery, secrets, discoveries) — <strong>Tension</strong> (conflict, stakes, urgency) — <strong>Emotion</strong> (personal stories, heartfelt moments) — <strong>Informative</strong> (facts, data, educational). Most videos blend 2–3 of these.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">3.2</span> Smart Viewing Method — Two-Pass System</div>
+        <div class="subsection-desc">Never edit on your first watch. Always watch twice — once to feel, once to analyze. This saves hours of rework later.</div>
+        <div class="sub-heading">Pass 1 — Feel the Content</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text">Watch ALL footage at <strong>2x speed</strong> without stopping.<span class="why">Goal: Get the big picture. Understand the full story without getting lost in details. Don't mark anything yet.</span></span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text">Notice where you feel engaged vs. bored as a viewer.<span class="why">Your gut reaction = viewer's gut reaction. Trust it.</span></span></li>
+        </ul>
+        <div class="sub-heading">Pass 2 — Mark & Categorize</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Mark best takes</strong> — The delivery that sounds most natural, clear, and energetic.</span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Mark high-energy lines</strong> — Moments where the speaker has peak energy, conviction, or emotion. These are your cut points and B-roll triggers.</span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Mark important information moments</strong> — Key facts, stats, or points that need visual reinforcement with B-roll or text.</span></li>
+        </ul>
+        <div class="sub-heading">Sort Into Folders</div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title">📂 Sort Into These Bins</div><div class="card-items"><div class="card-item">Cinematic Shots / B-Roll</div><div class="card-item">Establishment Shots</div><div class="card-item">Dialogue / Interview clips</div><div class="card-item">Ambient sound moments</div></div></div>
+          <div class="card"><div class="card-title">🏷️ Color Label System (Premiere)</div><div class="card-items"><div class="card-item" style="color:var(--green);">Green = Best take ✓</div><div class="card-item" style="color:var(--yellow);">Yellow = Usable take</div><div class="card-item" style="color:var(--red);">Red = Reject / unusable</div><div class="card-item" style="color:var(--purple);">Purple = B-roll candidate</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="s4">
+      <div class="section-header">
+        <span class="section-icon">🗺️</span>
+        <div>
+          <div class="section-number">Section 04</div>
+          <div class="section-title">On-Location Documentary SOP</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">4.1</span> Objectives — What a Documentary Edit Must Achieve</div>
+        <div class="subsection-desc">Documentary editing is fundamentally different from talking head editing. The goal is immersion, not information delivery. The viewer should feel like they are physically present at the location.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Create immersive, cinematic storytelling</strong> — The viewer must forget they are watching a YouTube video. They should feel transported.<span class="why">Use wide establishing shots, ambient sound, natural pacing, and lingering moments to build this sense of place.</span></span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Make the viewer feel "I am actually there"</strong> — This is the highest compliment a documentary editor can receive.<span class="why">Achieved through: proper ambient sound, smooth transitions, matching eyelines, and not over-cutting.</span></span></li>
+          <li class="point-item"><span class="point-dot yellow"></span><span class="point-text"><strong>Maintain authenticity and credibility</strong> — Documentary viewers are very sensitive to fakeness. Nothing should look staged or over-produced.<span class="why">Use natural color grades, avoid unnecessary animations, and let real moments play out fully.</span></span></li>
+          <li class="point-item"><span class="point-dot orange"></span><span class="point-text"><strong>Avoid the over-edited YouTube feel</strong> — No meme cuts, no zooms every 2 seconds, no constant background music that drowns out the atmosphere.<span class="why">Documentary editing breathes. It gives the viewer space to absorb what they're seeing.</span></span></li>
+        </ul>
+        <div class="callout rule"><span class="callout-icon">🚫</span><div><strong>What NOT to do in documentary editing:</strong> Jump cuts every 3 seconds on A-roll, unnecessary zoom effects, over-processed color grades, using the same B-roll twice, cutting away before a moment is complete.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">4.2</span> Core Editing Principle — Let It Breathe</div>
+        <div class="subsection-desc">The most common mistake in documentary editing is over-cutting. Real life has pauses, ambient moments, and visual poetry that communicates without words. Your job is to preserve these.</div>
+        <div class="callout tip"><span class="callout-icon">💡</span><div><strong>The Breathing Rule:</strong> Show moments beautifully → make the atmosphere feel real → tell the story. The video must flow continuously — like a river, not a series of disconnected clips. Let moments breathe. Don't rush to the next cut.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">4.3</span> Story Structure — 5 Acts (Use for Every Documentary)</div>
+        <div class="subsection-desc">Every on-location documentary we produce follows this 5-act structure. It gives the viewer a satisfying narrative journey while also keeping them engaged throughout.</div>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-content"><div class="step-title">Hook — Visual + Curiosity</div><div class="step-desc">The first 15–30 seconds. Show the most visually striking or intriguing moment from the entire video. Make the viewer ask "what is this? I need to keep watching." Use your best footage here — not your opening footage.</div></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-content"><div class="step-title">Setup — Location Introduction</div><div class="step-desc">Establish WHERE we are. Wide establishing shots, ambient sound of the place, introduction of the main subject or speaker. The viewer needs to feel grounded before the exploration begins.</div></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-content"><div class="step-title">Exploration</div><div class="step-desc">The main body of the documentary. Moving through the location, meeting people, discovering things. This section can breathe more — slower pacing is acceptable here as the viewer is already invested.</div></div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-content"><div class="step-title">Key Insight</div><div class="step-desc">The most important moment, revelation, or lesson of the entire video. This is the emotional or intellectual peak. Build toward it with pacing — the cuts leading into this moment should tighten.</div></div></div>
+          <div class="step-item"><div class="step-num">5</div><div class="step-content"><div class="step-title">Ending — Impactful Conclusion</div><div class="step-desc">Leave the viewer with something. A final visual, a powerful quote, a lingering shot. The ending is what they remember and what makes them share the video. Don't rush it — give it time to land.</div></div></div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">4.4</span> Shot Management — Purpose-Driven Editing</div>
+        <div class="subsection-desc">In a documentary, every single shot must earn its place. There is no "filler." If you can't answer WHY this shot is here, it shouldn't be there.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Every shot must have a clear purpose</strong> — Does it advance the story? Establish location? Show emotion? Provide information? If not — cut it.<span class="why">Purposeless shots confuse the viewer and slow down the narrative.</span></span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Visuals must be story-driven, not random</strong> — Don't place B-roll just because it "looks nice." It must support what is being said or felt in that moment.<span class="why">Random B-roll breaks the viewer's immersion and makes the edit feel like a slideshow.</span></span></li>
+          <li class="point-item"><span class="point-dot yellow"></span><span class="point-text"><strong>Maintain speed and consistency</strong> — The overall pacing rhythm should not suddenly change without a reason. Abrupt pacing shifts confuse viewers.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" id="s5">
+      <div class="section-header">
+        <span class="section-icon">✂️</span>
+        <div>
+          <div class="section-number">Section 05</div>
+          <div class="section-title">Editing Flow & Workflow</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">5.1</span> Master 7-Step Flow — Follow This for Every Single Video</div>
+        <div class="subsection-desc">This is the core workflow. Never skip steps. Never reorder steps. Each step builds on the previous one. Jumping ahead creates rework.</div>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-content"><div class="step-title">Pre-Edit Planning</div><div class="step-desc">Define video goal, audience feel, content direction. Answer the 3 story questions. Use the AI tool for initial suggestions. This happens BEFORE opening Premiere.</div></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-content"><div class="step-title">Shot Selection</div><div class="step-desc">Watch all footage twice. Mark best takes, high-energy lines, important moments. Sort into labeled bins. Do NOT start cutting yet.</div></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-content"><div class="step-title">Rough Cut</div><div class="step-desc">Arrange the best clips in story order. No effects, no B-roll, no music yet. Just get the story working. Focus entirely on narrative flow. If the story doesn't work here, it won't work later.</div></div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-content"><div class="step-title">Structure Lock</div><div class="step-desc">Review the rough cut. Confirm the story arc, pacing, and overall structure. Make any big structural changes NOW — moving sections, trimming, rearranging. After this step, no more big structural changes.</div></div></div>
+          <div class="step-item"><div class="step-num">5</div><div class="step-content"><div class="step-title">Visual Layering — with Color Labels</div><div class="step-desc">Add B-roll, music, animations, text highlights, zoom effects. This is where the video goes from rough to polished. Use color labels in Premiere to track progress by section.</div></div></div>
+          <div class="step-item"><div class="step-num">6</div><div class="step-content"><div class="step-title">Sound Design</div><div class="step-desc">Add SFX, ambient sound, transition swooshes. Balance all audio levels — voice, music, SFX. The video should sound as good as it looks.</div></div></div>
+          <div class="step-item"><div class="step-num">7</div><div class="step-content"><div class="step-title">Polish, Recheck & Export</div><div class="step-desc">Watch the full video one final time on a fresh eye. Fix any glitch, jump cut, or audio issue. Add any missing element. Then export at the correct settings.</div></div></div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">5.2</span> Rough Cut — The Foundation of the Edit</div>
+        <div class="subsection-desc">The rough cut is the most important step. A great rough cut makes everything else easy. A bad rough cut means endless rework. Spend real time here.</div>
+        <div class="sub-heading">Story Arrangement</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Arrange clips in story order</strong> — Follow the 5-act structure or the natural narrative arc of the content. Don't follow the shooting order — follow the story order.</span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>No effects at this stage</strong> — No B-roll, no music, no animations. Just the raw spoken content in the right order. This forces you to ensure the story works on its own merit.</span></li>
+        </ul>
+        <div class="sub-heading">Music & Pacing</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Find the right music first</strong> — The music sets the emotional tone for everything. Choose a track that matches the intended emotion (curiosity, energy, calm, sadness). Once music is locked, start pacing the edit to it.<span class="why">Music is the skeleton that the visual edit hangs on. Wrong music = wrong feel no matter how good the cuts are.</span></span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Use beat drops for breathing space</strong> — When the music drops or has a break, use that space for slower, more atmospheric shots. This creates natural rhythm in the edit.</span></li>
+        </ul>
+        <div class="sub-heading">B-Roll Strategy</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot yellow"></span><span class="point-text"><strong>B-roll reinforces story AND covers jump cuts</strong> — When you cut out a pause or stutter from the A-roll, the jump cut gets covered by B-roll placed on top. Both functions happen simultaneously.<span class="why">This is the core technique that makes talking head videos look professional.</span></span></li>
+        </ul>
+        <div class="callout rule"><span class="callout-icon">🚫</span><div><strong>Strict Rule:</strong> B-roll must NEVER repeat within the same video. Once a clip is used, it is done. Using the same B-roll twice instantly makes the video look unprofessional and low-budget.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">5.3</span> Editing the A-Roll — Talking Head Technique</div>
+        <div class="subsection-desc">The A-roll cut is the core technical skill of talking head editing. Speed + precision here saves hours on every project.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Cut at 2x speed with audio waveform visible</strong> — Watch at double speed while watching the audio waveform. Cut on silences (flat waveform). This is 3x faster than normal speed editing and just as accurate.<span class="why">The waveform shows you exactly where pauses and breaths are without needing to listen at normal speed.</span></span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Start from the strongest moment, not the beginning</strong> — The first clip on your timeline should be the most engaging moment from the entire footage. Then build the story from there.<span class="why">Starting strong prevents the "slow beginning" problem that kills watch time in the first 30 seconds.</span></span></li>
+        </ul>
+        <div class="sub-heading">History Videos (Images Only)</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot purple"></span><span class="point-text"><strong>Design a graphic layout for each image</strong> — Don't just place a raw image on screen. Create a designed frame around it — texture, color treatment, subtle motion, date/context label.<span class="why">Raw historical photos on a plain background look like a school presentation. A designed treatment makes them feel cinematic and credible.</span></span></li>
+          <li class="point-item"><span class="point-dot purple"></span><span class="point-text"><strong>Use premade image templates</strong> — We have templates in the asset folder for displaying historical photos. Use these and customize per video.</span></li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">5.4</span> Hook Rules — The First 30 Seconds Decide Everything</div>
+        <div class="subsection-desc">YouTube analytics consistently show that 60–70% of viewers who leave a video, leave within the first 30 seconds. The hook is not just important — it is the entire video. If the hook fails, nothing else matters.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot orange"></span><span class="point-text"><strong>Visual change every 4–6 seconds in the hook</strong> — The viewer's brain needs constant novelty in the first 30 seconds. A static shot for more than 6 seconds in the hook = immediate click-away.<span class="why">Use: B-roll cuts, zoom effects, animation reveals, text pops — any visual change counts.</span></span></li>
+          <li class="point-item"><span class="point-dot orange"></span><span class="point-text"><strong>Energy rhythm like a roller coaster</strong> — The first 30 seconds should have a wave pattern: fast → pause → fast → bigger reveal → build. Not flat, not constantly fast.<span class="why">Constant speed becomes white noise. The contrast between fast and slow is what creates tension and excitement.</span></span></li>
+          <li class="point-item"><span class="point-dot orange"></span><span class="point-text"><strong>Sync B-roll and animation to music beats</strong> — Every visual cut in the hook should land on a beat. This creates a subconscious feeling of satisfaction and energy in the viewer.</span></li>
+          <li class="point-item"><span class="point-dot orange"></span><span class="point-text"><strong>First 5–10 frames must be on screen immediately</strong> — No black frame, no slow fade in, no logo intro. The video starts at full energy from frame 1.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECTION 6 -->
+    <div class="section" id="s6">
+      <div class="section-header">
+        <span class="section-icon">🎞️</span>
+        <div>
+          <div class="section-number">Section 06</div>
+          <div class="section-title">Visual Layering & B-Roll</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">6.1</span> B-Roll Rules — Quality Over Quantity</div>
+        <div class="subsection-desc">B-roll is the visual language of your video. Bad B-roll makes great content look cheap. Good B-roll elevates mediocre content into something watchable. Choose every B-roll clip with intention.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Topic-related visuals only</strong> — The B-roll must directly relate to what is being said at that exact moment in the A-roll. "Related" doesn't mean "vaguely similar" — it means visually illustrating the specific point.<span class="why">Off-topic B-roll confuses viewers and undermines the credibility of the content.</span></span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Always prefer real video over animation</strong> — If you have the choice between a real video clip and an animation for the same concept, always use the real video. Real footage = credibility and immersion.<span class="why">Animations look like explanations. Real video looks like evidence.</span></span></li>
+          <li class="point-item"><span class="point-dot yellow"></span><span class="point-text"><strong>For history content: use original photos or dated articles</strong> — Show the actual historical photo, newspaper front page, or article with the date visible. This builds instant credibility.<span class="why">A screenshot of a news article with a visible date is 10x more convincing than a stock image of "history".</span></span></li>
+          <li class="point-item"><span class="point-dot red"></span><span class="point-text"><strong>Do NOT use random stock footage</strong> — Generic stock footage (random people walking, city skylines that don't match, irrelevant nature shots) makes the video look lazy and disconnected.<span class="why">Viewers can spot stock footage instantly. It breaks immersion and reduces trust in the content.</span></span></li>
+        </ul>
+        <div class="sub-heading">B-Roll Pattern — Repeat This Every 3 Clips</div>
+        <div class="pattern-block">
+          <div class="pattern-step p1">Clip 1<div class="label">Normal Cut</div></div>
+          <div class="pattern-step p2">Clip 2<div class="label">Zoom In</div></div>
+          <div class="pattern-step p3">Clip 3<div class="label">B-Roll / Animation</div></div>
+        </div>
+        <div style="margin-top:8px; font-size:12px; color:var(--text-muted);">This pattern creates visual variety without requiring constant creative decisions. It's a repeatable system that keeps the video feeling dynamic.</div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">6.2</span> Punch-In Zoom — Emphasize What Matters</div>
+        <div class="subsection-desc">A punch-in zoom is a subtle zoom into the existing frame. It signals to the viewer: "this is important, pay attention here." Use it sparingly for maximum effect.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Use on important lines or key statements</strong> — When the speaker says something that is the core point of the video, zoom in slightly. This creates emphasis without any text or graphics.<span class="why">The zoom is a visual underlining. Don't underline every sentence — only the most important ones.</span></span></li>
+        </ul>
+        <div class="callout note"><span class="callout-icon">⚠️</span><div>Over-using punch-in zooms makes the video feel restless and cheap. Use a maximum of 1 zoom every 30–45 seconds. The punch-in preset is available in your Speed System presets.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">6.3</span> Cutaways — When to Use B-Cam</div>
+        <div class="subsection-desc">Cutaways are reaction shots or secondary camera angles that cut away from the main A-roll. They add depth and visual variety to interview-style content.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Use B-cam footage when available</strong> — If a second camera was filming the interview from a different angle, use those clips as cutaways during the edit.<span class="why">Cutaways make the edit feel like a professionally produced documentary rather than a simple screen recording.</span></span></li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">6.4</span> Speaker Eye Line Rule — Maintain Visual Consistency</div>
+        <div class="subsection-desc">This is a technical rule about where elements appear on screen. Violating it creates subtle visual discomfort that viewers feel but can't explain — and it makes the edit look amateurish.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>B-roll must match the speaker's eye line position</strong> — If the speaker is positioned on the left third of the frame, the primary subject in your B-roll should also appear in the left third.<span class="why">When you cut back to the speaker after B-roll, the viewer's eye should land in the same place it was before. Eye line mismatches create a visual jolt.</span></span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Animations without people — maintain consistent positioning</strong> — The main element of an animation (title, graphic, icon) should occupy the same screen position as the speaker when transitioning to/from speaker footage.</span></li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">6.5</span> Sequence Template & After Effects Usage</div>
+        <div class="subsection-desc">Use the pre-built sequence template in Premiere. After Effects should be used sparingly — only for specific elements that can't be done in Premiere.</div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title">✅ Use After Effects For</div><div class="card-items"><div class="card-item">Maps with animated routes</div><div class="card-item">Complex motion graphics</div><div class="card-item">Animated titles / lower thirds</div></div></div>
+          <div class="card"><div class="card-title">🚫 Do NOT Use AE For</div><div class="card-items"><div class="card-item">Simple text overlays (use Premiere)</div><div class="card-item">Basic zoom/slide effects (use presets)</div><div class="card-item">Color grading (use Lumetri in Premiere)</div></div></div>
+        </div>
+        <div class="callout rule"><span class="callout-icon">🚫</span><div><strong>Documentary Rule:</strong> The edit should be invisible. Viewers should never notice the editing in a documentary. If an After Effects element calls attention to itself, remove it. Feel over flash.</div></div>
+      </div>
+    </div>
+
+    <!-- SECTION 7 -->
+    <div class="section" id="s7">
+      <div class="section-header">
+        <span class="section-icon">✨</span>
+        <div>
+          <div class="section-number">Section 07</div>
+          <div class="section-title">Animations & Effects</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">7.1</span> Animation Rules — Less Is More</div>
+        <div class="subsection-desc">Animations are powerful when used with restraint. The moment you overuse them, they stop working — the viewer becomes desensitized and the video looks cluttered.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Same animation cannot repeat more than 2 times per video</strong> — If you use a specific motion style (e.g., the "slide in from left" text animation) more than twice, it becomes a crutch that the viewer notices.<span class="why">Variety signals effort and production value. Repetition signals laziness.</span></span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>All animations must have movement while on screen</strong> — A static graphic placed on screen is not an animation — it's just an image. Anything you bring in from After Effects must have ongoing motion (subtle float, shimmer, pulse) while it is visible.<span class="why">Static elements on a moving video feel jarring and unprofessional.</span></span></li>
+        </ul>
+        <div class="sub-heading">Approved Animation Types</div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title">Fade</div><div style="font-size:12px;color:var(--text-muted);">Smooth opacity fade in/out. Best for subtle text or overlay introductions. Never use a hard cut for graphics.</div></div>
+          <div class="card"><div class="card-title">Smooth Zoom</div><div style="font-size:12px;color:var(--text-muted);">Gradual scale increase/decrease. Use for punch-in emphasis or cinematic B-roll entrances.</div></div>
+          <div class="card"><div class="card-title">Slide</div><div style="font-size:12px;color:var(--text-muted);">Directional movement from off-screen. Use for lower thirds, titles, and information graphics.</div></div>
+        </div>
+        <div class="callout tip"><span class="callout-icon">💡</span><div><strong>Template Rule:</strong> If you create a new animation that works well in a video, immediately save it as a reusable template. Don't rebuild from scratch every time. Your template library grows your speed over time.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">7.2</span> Text Highlights — Guide the Viewer's Attention</div>
+        <div class="subsection-desc">Text highlights are on-screen text that appears synchronized with what the speaker is saying. They emphasize key words or phrases and improve retention and accessibility.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Use AI tool to identify highlight moments</strong> — The AI tool will flag key phrases from the script that are worth highlighting. Review and approve these suggestions manually.</span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Text animations must be cinematic, not basic</strong> — No default Premiere text with a simple fade. Every text element must have a designed appearance — font, weight, color, motion — that fits our visual brand.</span></li>
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Every text element must be high quality</strong> — If you can't make the text look premium, don't add it at all. Low quality text is worse than no text.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SECTION 8 -->
+    <div class="section" id="s8">
+      <div class="section-header">
+        <span class="section-icon">🔊</span>
+        <div>
+          <div class="section-number">Section 08</div>
+          <div class="section-title">Sound Design</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">8.1</span> Sound Design Philosophy — Sound Should Be Felt, Not Heard</div>
+        <div class="subsection-desc">Great sound design is invisible. The viewer never consciously notices sound effects — they just feel more engaged, more immersed, and more emotionally connected. Bad sound design is immediately obvious and distracting.</div>
+        <div class="callout tip"><span class="callout-icon">💡</span><div><strong>The Test:</strong> Play your final video without looking at the screen. Does it sound like a professional production? Is there ambient atmosphere? Are transitions smooth? Does the music support the emotion? If yes — your sound design is working.</div></div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Sound effects must feel natural — not performed</strong> — A whoosh effect on a text animation should be subtle, not a Hollywood-style sound. The viewer should feel it subconsciously, not hear it consciously.<span class="why">Loud, prominent SFX call attention to the editing rather than the story.</span></span></li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">8.2 & 8.3</span> Repetition Rules — No Repeating Sounds</div>
+        <div class="subsection-desc">The ear is even more sensitive to repetition than the eye. Repeated sounds become annoying extremely fast.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot red"></span><span class="point-text"><strong>B-roll sound effects must NOT repeat</strong> — If you used a specific ambient swoosh or environment sound on one B-roll clip, do not use that exact same sound on another clip in the same video.</span></li>
+          <li class="point-item"><span class="point-dot red"></span><span class="point-text"><strong>Animation sounds must NOT repeat more than 2 times</strong> — If a specific click or whoosh sound is used for an animation, that sound can appear a maximum of 2 times in the entire video. After that, use a different sound for the same type of animation.</span></li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">8.4</span> Sound Design Process — Do This After the Visual Edit Is Locked</div>
+        <div class="subsection-desc">Sound design is the last creative step before final export. Do not do it during the rough cut phase — you will waste time designing sound for clips that get cut later.</div>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-content"><div class="step-title">Add Ambient Background Sound</div><div class="step-desc">For documentary: add the ambient sound of the location (crowd noise, wind, market sounds, nature). For talking head: a subtle room tone to fill the silence between cuts. This makes the audio feel continuous rather than choppy.</div></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-content"><div class="step-title">Add Transition SFX — Swoosh & Click</div><div class="step-desc">Add subtle motion sounds to visual transitions (zooms, slides, text reveals). These should be barely audible but create a satisfying tactile feel to the edit.</div></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-content"><div class="step-title">Balance All Audio Levels</div><div class="step-desc">Speaker voice should be at -6dB to -3dB. Music should be at -18dB to -12dB (or lower when speaker is talking). SFX should be between music and voice levels. Check with headphones AND laptop speakers.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 9 -->
+    <div class="section" id="s9">
+      <div class="section-header">
+        <span class="section-icon">🎨</span>
+        <div>
+          <div class="section-number">Section 09</div>
+          <div class="section-title">Color Grading & Final Export</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">9.1</span> Color Grading Style — Natural + Cinematic</div>
+        <div class="subsection-desc">Our color grading philosophy is: "enhance, don't transform." The goal is to make the footage look like the best version of what it actually is — not to make it look like something it isn't.</div>
+        <ul class="point-list">
+          <li class="point-item"><span class="point-dot"></span><span class="point-text"><strong>Natural tones — no over-saturation</strong> — Skin tones should look real. Colors should be accurate to what was actually filmed. Boosting saturation to 150% looks amateurish and fake.<span class="why">Over-saturated color immediately signals "YouTube edit" to viewers and undermines documentary credibility.</span></span></li>
+          <li class="point-item"><span class="point-dot green"></span><span class="point-text"><strong>Slight cinematic contrast</strong> — Lift the blacks slightly (never fully black), and pull highlights down slightly. This creates the "film look" without going to an extreme teal-orange grade.<span class="why">A subtle S-curve in the tone curve is all you need for the cinematic look. Anything more aggressive becomes a style choice that should be intentional, not default.</span></span></li>
+          <li class="point-item"><span class="point-dot yellow"></span><span class="point-text"><strong>Every element at highest possible quality</strong> — Check for any soft focus, overexposed highlights, or crushed shadows in the footage. Use Lumetri's wheels to correct before applying the look.</span></li>
+        </ul>
+        <div class="callout info"><span class="callout-icon">📌</span><div>The color grade preset is already set up in the template project. Apply it and make minor adjustments per clip as needed. Do not rebuild the grade from scratch for every video — that defeats the purpose of having a preset.</div></div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title"><span class="num">9.2</span> Final Polish Checklist — Before You Export</div>
+        <div class="subsection-desc">Watch the entire video one final time with fresh eyes. Ideally, take a break before this final review — your eyes will catch more after stepping away.</div>
+        <div class="step-list">
+          <div class="step-item"><div class="step-num">1</div><div class="step-content"><div class="step-title">Full Video Watch</div><div class="step-desc">Watch from start to finish without stopping. Note anything that feels off — pacing, visuals, audio. Only stop to fix, then continue.</div></div></div>
+          <div class="step-item"><div class="step-num">2</div><div class="step-content"><div class="step-title">Check for Glitches</div><div class="step-desc">Look for: video glitches, jump cuts not covered by B-roll, audio pops or sudden volume changes, text that appears for too short or too long, color inconsistencies between clips.</div></div></div>
+          <div class="step-item"><div class="step-num">3</div><div class="step-content"><div class="step-title">Check for Missing Elements</div><div class="step-desc">Is there a spot where B-roll is needed but missing? A text highlight that was mentioned in the plan but not added? A section that feels slow but has no visual change? Fix it.</div></div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-content"><div class="step-title">Export at Correct Settings</div><div class="step-desc">YouTube: H.264, 1080p or 4K, 16Mbps+, AAC audio 320kbps. File name: [Video Topic]_[Date]_FINAL.mp4. Upload to the shared delivery folder.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK REFERENCE -->
+    <div class="quick-ref" id="quickref">
+      <div class="quick-ref-title">⚡ Quick Reference — Rules Every Editor Must Know</div>
+      <div class="rules-grid">
+        <div class="rule-chip"><span class="r-icon">⏱️</span> Change scene every <strong>10–20 seconds</strong></div>
+        <div class="rule-chip"><span class="r-icon">🚫</span> B-roll must <strong>NEVER repeat</strong></div>
+        <div class="rule-chip"><span class="r-icon">✂️</span> Same animation max <strong>2 times per video</strong></div>
+        <div class="rule-chip"><span class="r-icon">📹</span> Real video always beats animation</div>
+        <div class="rule-chip"><span class="r-icon">👁️</span> Editor must be <strong>invisible</strong> in the final video</div>
+        <div class="rule-chip"><span class="r-icon">🎣</span> Visual change every <strong>4–6 sec in hook</strong></div>
+        <div class="rule-chip"><span class="r-icon">🤖</span> AI tool = suggestion, not final decision</div>
+        <div class="rule-chip"><span class="r-icon">🎵</span> Music sets the tone — choose it first</div>
+        <div class="rule-chip"><span class="r-icon">📁</span> Always start from the <strong>template project</strong></div>
+        <div class="rule-chip"><span class="r-icon">🔊</span> Sound should be felt, not heard</div>
+      </div>
+      <hr style="margin:24px 0; border-color:rgba(79,142,247,0.2);">
+      <div class="sub-heading" style="margin:0 0 12px;">Master 7-Step Flow — Never Skip</div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <div style="padding:8px 14px; background:var(--surface); border-radius:6px; font-size:12px; font-weight:600; color:var(--accent); border:1px solid var(--accent-soft);">1. Plan</div>
+        <div style="color:var(--text-dim); display:flex;align-items:center;">→</div>
+        <div style="padding:8px 14px; background:var(--surface); border-radius:6px; font-size:12px; font-weight:600; color:var(--text); border:1px solid var(--border);">2. Select Shots</div>
+        <div style="color:var(--text-dim); display:flex;align-items:center;">→</div>
+        <div style="padding:8px 14px; background:var(--surface); border-radius:6px; font-size:12px; font-weight:600; color:var(--text); border:1px solid var(--border);">3. Rough Cut</div>
+        <div style="color:var(--text-dim); display:flex;align-items:center;">→</div>
+        <div style="padding:8px 14px; background:var(--surface); border-radius:6px; font-size:12px; font-weight:600; color:var(--text); border:1px solid var(--border);">4. Lock Structure</div>
+        <div style="color:var(--text-dim); display:flex;align-items:center;">→</div>
+        <div style="padding:8px 14px; background:var(--surface); border-radius:6px; font-size:12px; font-weight:600; color:var(--text); border:1px solid var(--border);">5. Visual Layer</div>
+        <div style="color:var(--text-dim); display:flex;align-items:center;">→</div>
+        <div style="padding:8px 14px; background:var(--surface); border-radius:6px; font-size:12px; font-weight:600; color:var(--text); border:1px solid var(--border);">6. Sound Design</div>
+        <div style="color:var(--text-dim); display:flex;align-items:center;">→</div>
+        <div style="padding:8px 14px; background:var(--surface); border-radius:6px; font-size:12px; font-weight:600; color:var(--green); border:1px solid var(--green-soft);">7. Export ✓</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Active nav highlight on scroll
+  const sections = document.querySelectorAll('.section, .quick-ref');
+  const navLinks = document.querySelectorAll('.nav-item');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const id = entry.target.id;
+        const active = document.querySelector(`.nav-item[href="#${id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+
+  // Smooth scroll for all anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const el = document.querySelector(a.getAttribute('href'));
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
